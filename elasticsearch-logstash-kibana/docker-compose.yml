@@ -1,0 +1,43 @@
+version: '3.3'
+services:
+  elasticsearch: 
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+    container_name: elasticsearch
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ./es/data:/usr/share/elasticsearch/data
+    #  - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    environment:
+      discovery.type: single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.5.4
+    container_name: logstash
+    restart: always
+    command: /usr/share/logstash/bin/logstash -f /usr/share/logstash/config/conf.d/logstash-syslog.conf
+    links:
+      - elasticsearch
+    ports:
+      - 5044:5044
+    volumes:
+      - ./logstash/config/conf.d:/usr/share/logstash/config/conf.d
+      - ./logstash/log/:/var/log/logstash
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.4
+    container_name: kibana
+    restart: always
+    ports:
+      - 5601:5601
+    #volumes:
+    #  - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    links:
+      - elasticsearch
