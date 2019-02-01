@@ -3,7 +3,7 @@ filebeat.inputs:
 - type: log
   enabled: true
   fields:
-    appname: otc
+    appname: otc  #根据这个创建索引名称
   paths:
     - /opt/logs/otc/otc_uniform.log
   encoding: UTF-8
