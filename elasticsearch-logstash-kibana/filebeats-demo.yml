@@ -33,6 +33,17 @@ filebeat.inputs:
   multiline.negate: true
   multiline.match: after
 
+- type: log   # log和stdin两种
+  enabled: true # 是否启用
+  fields:
+    appname: usdtapiserver  #根据这个创建索引名称
+  paths:
+    - opt/app/blockchain-api/usdt-api/logs/usdt-api.log
+  encoding: UTF-8 # 编码
+  multiline.pattern: ^\> #多行合并
+  multiline.negate: true
+  multiline.match: after
+
 filebeat.config.modules:
   path: ${path.config}/modules.d/*.yml
   reload.enable: false
