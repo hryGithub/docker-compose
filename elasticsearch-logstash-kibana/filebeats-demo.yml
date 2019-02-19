@@ -1,13 +1,35 @@
 #filebeats.yml配置示例
 filebeat.inputs:
-- type: log
-  enabled: true
+- type: log   # log和stdin两种
+  enabled: true # 是否启用
   fields:
     appname: otc  #根据这个创建索引名称
   paths:
     - /opt/logs/otc/otc_uniform.log
-  encoding: UTF-8
-  multiline.pattern: ^\>
+  encoding: UTF-8 # 编码
+  multiline.pattern: ^\> #多行合并
+  multiline.negate: true
+  multiline.match: after
+
+- type: log   # log和stdin两种
+  enabled: true # 是否启用
+  fields:
+    appname: ma-web  #根据这个创建索引名称
+  paths:
+    - /opt/logs/ma-web/ma-web.log
+  encoding: UTF-8 # 编码
+  multiline.pattern: ^\> #多行合并
+  multiline.negate: true
+  multiline.match: after
+
+- type: log   # log和stdin两种
+  enabled: true # 是否启用
+  fields:
+    appname: tss  #根据这个创建索引名称
+  paths:
+    - /opt/logs/tradeservice/tss.log
+  encoding: UTF-8 # 编码
+  multiline.pattern: ^\> #多行合并
   multiline.negate: true
   multiline.match: after
 
