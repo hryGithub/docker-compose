@@ -19,7 +19,7 @@ delete_indies(){
     fi
 }
 
-curl -XGET %ES_URL/_cat/indices | awk '{print $3}' | awk -F"-" '{print $NF}' | egrep "[0-9]*\.[0-9]*\.[0-9]*" | sort | uniq  | sed 's/\./-/g' | while read LINE
+curl -XGET $ES_URL/_cat/indices | awk '{print $3}' | awk -F"-" '{print $NF}' | egrep "[0-9]*\.[0-9]*\.[0-9]*" | sort | uniq  | sed 's/\./-/g' | while read LINE
 do
     delete_indies $LINE
 done
