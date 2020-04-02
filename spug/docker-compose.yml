@@ -1,0 +1,58 @@
+version: '3'
+services:
+  nginx: 
+    image: nginx:alpine
+    container_name: spug_nginx
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx:/etc/nginx/
+      - ./nginx/build:/usr/share/nginx/html
+    networks:
+      - spug
+
+  mysql:
+    image: mysql:5.7
+    container_name: spug_mysql
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: spug
+      MYSQL_USER: spug
+      MYSQL_PASSWORD: spug
+    networks:
+      - spug
+
+  redis:
+    image: redis:latest
+    container_name: spug_redis
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - spug
+
+  spug:
+    build: .
+    context: .
+      dockerfile: spug/Dockerfile
+      args:
+        Version: ${Version}
+    image: spug:${Version}
+    container_name: spug
+    restart: always
+    ports:
+      - 9001:9001
+      - 9002:9002
+    volumes:
+      - ./gogs:/data
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - spug
