@@ -7,5 +7,8 @@ sed -i "s@root@$DB_USER@g" /usr/local/apioak/conf/apioak.yaml
 sed -i "s@123000@$DB_PASSWORD@g" /usr/local/apioak/conf/apioak.yaml
 
 
+if [[ -z $(mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST -P$DB_PORT $DB_NAME -e "show tables;" |grep "oak_users") ]];then
+    mysql -u$DB_USER -p$DB_PASSWORD -h$DB_HOST -P$DB_PORT $DB_NAME < /usr/local/apioak/conf/apioak.sql
+fi
 
 /usr/bin/apioak start
